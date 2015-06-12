@@ -76,9 +76,9 @@ local function obfuscate(code, level, mxLevel, useLoadstring, makeFluff, randomC
         a = XFuscator.Uglify(a)
     end
     
-    --if useTD then
-    --    a = XFuscator.TamperDetection(a)
-    --end
+    if useTD then
+        a = XFuscator.TamperDetection(a)
+    end
     
     success, ast = ParseLua(a)
     if not success then
@@ -88,18 +88,16 @@ local function obfuscate(code, level, mxLevel, useLoadstring, makeFluff, randomC
     
     a = Format_Mini(ast) -- Extra security (renames code from 'tmp' and CONSTANT_POOL, and constant encryption)
     
-    if useLoadstring then
+    --[[ if useLoadstring then
         print("Precompiling ...")
         a = XFuscator.Precompile(a)
-    end
+    end ]]
     
     local a2
     if step2 == true then
-        print("Step 2 ...")
-        -- Convert to char/table/loadstring thing
         a2 = XFuscator.Step2(a, GenerateFluff, useTD)
     else
-        a2 = "return loadstring('" .. dumpString(a) .. "')()"
+        a2 = a
     end
     
     if randomComments then
