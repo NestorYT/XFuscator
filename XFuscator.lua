@@ -30,6 +30,7 @@ local options = {
     uglify = false,
     encryptConstants = false,
     tamperDetection = true,
+	_glonencoder = true,
 }
 
 local outfn
@@ -61,6 +62,7 @@ if arg and arg[1] then
         print("  -encryptconsts      Turns off constant string encryption. Off by default, as ")
         print("                      It causes MASSIVE bloating and it is just simple xor")
         print("  -notd           Turns off using SHA256 hashing to check for tamper detection")
+        print("  -noglon           Turns off GLON encoding")
         print("  -h  -help       Shows this message")
         return
     end
@@ -94,6 +96,8 @@ if arg and arg[1] then
             options.encryptConstants = true
         elseif a == "-notd" then
             options.tamperDetection = false
+		elseif a == "-noglon" then
+			options._glonencoder = false
         elseif a == "-h" or a == "-help" then
             
         end
@@ -105,7 +109,7 @@ else
 end
 
 local t1 = os and os.time() or tick()
-local result, msg = XFuscator.XFuscate(code, options.level, options.mxLevel, options.loadstring, options.fluff, options.comments, options.step2, options.uglify, options.encryptConstants, options.tamperDetection)
+local result, msg = XFuscator.XFuscate(code, options.level, options.mxLevel, options.loadstring, options.fluff, options.comments, options.step2, options.uglify, options.encryptConstants, options.tamperDetection, options._glonencoder)
 local t2 = os and os.time() or tick()
 if not outfn then
     print(result)

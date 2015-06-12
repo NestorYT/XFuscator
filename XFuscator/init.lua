@@ -11,6 +11,7 @@ XFuscator.RandomComments = require'XFuscator.RandomComments'
 XFuscator.EncryptStrings = require'XFuscator.StringEncryptor'
 XFuscator.Step2 = require'XFuscator.Step2'
 XFuscator.TamperDetection = require'XFuscator.TamperDetection'
+XFuscator.GLONEncoder = require'XFuscator.GLONEncoder'
 
 XFuscator.DumpString = function(x) 
     --return concat("\"", x:gsub(".", function(d) return "\\" .. string.byte(d) end), "\"") 
@@ -34,7 +35,7 @@ XFuscator.DumpString = function(x)
     end)
 end
 
-local function obfuscate(code, level, mxLevel, useLoadstring, makeFluff, randomComments, step2, useUglifier, encryptConstants, useTD)
+local function obfuscate(code, level, mxLevel, useLoadstring, makeFluff, randomComments, step2, useUglifier, encryptConstants, useTD, _glonencoder)
     if useLoadstring == nil then useLoadstring = true end
     level = level or 1
     mxLevel = mxLevel or 2
@@ -44,6 +45,7 @@ local function obfuscate(code, level, mxLevel, useLoadstring, makeFluff, randomC
     if useUglifier == nil then useUglifier = false end
     if encryptConstants == nil then encryptConstants = false end
     if useTD == nil then useTD = true end
+	if _glonencoder == nil then _glonencoder = true end
     
     local function GenerateFluff()
         if makeFluff then
@@ -65,10 +67,11 @@ local function obfuscate(code, level, mxLevel, useLoadstring, makeFluff, randomC
     print("Extracting constants ...")
     XFuscator.ExtractConstants(code, ast)
     
-    if encryptConstants then
+    --[[if encryptConstants then
         print("Encrypting constants ...")
         XFuscator.EncryptStrings(ast)
-    end
+    end]]
+	if encryptConstants then print("Encrypt constants not supported in GMod version") end
     
     local a = Format_Mini(ast)
     if useUglifier then
@@ -76,9 +79,10 @@ local function obfuscate(code, level, mxLevel, useLoadstring, makeFluff, randomC
         a = XFuscator.Uglify(a)
     end
     
-    if useTD then
+    --[[if useTD then
         a = XFuscator.TamperDetection(a)
-    end
+    end]]
+	if useTD then print("Tamper Detection not supported in GMod version") end
     
     success, ast = ParseLua(a)
     if not success then
@@ -88,22 +92,24 @@ local function obfuscate(code, level, mxLevel, useLoadstring, makeFluff, randomC
     
     a = Format_Mini(ast) -- Extra security (renames code from 'tmp' and CONSTANT_POOL, and constant encryption)
     
-    --[[ if useLoadstring then
+	--[[if useLoadstring then
         print("Precompiling ...")
         a = XFuscator.Precompile(a)
-    end ]]
+    end]]
+	if useLoadstring then print("Bytecode not supported in GMod version (Because of Garry)") end
     
-    local a2
-    if step2 == true then
-        a2 = XFuscator.Step2(a, GenerateFluff, useTD)
-    else
-        a2 = a
-    end
+    local a2 = a
+	if step2 then print("Fluffing not supported in GMod version") end
     
     if randomComments then
         print("Inserting unreadable and pointless comments ...")
         a2 = XFuscator.RandomComments(a2)
     end
+	
+	if _glonencoder then
+		print("GLON encoding ...")
+		a2 = XFuscator.GLONEncoder(a2)
+	end
     
     a2 = a2:gsub("\r+", " ")
     a2 = a2:gsub("\n+", " ")

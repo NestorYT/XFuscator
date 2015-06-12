@@ -6,7 +6,7 @@ local function GenerateSomeFluff()
     local x = math.random(1, #randomTable)
     if x > (#randomTable / 2) then
         local randomName = randomTable[x]
-        return table.concat{ "local ", string.rep("_", math.random(5, 10)), " = ", "____[#____ - 9](", "'" .. dumpString("loadstring(\"return " .. randomName .. "\")()") .. "'", ")\n" }
+        return table.concat{ "local ", string.rep("_", math.random(5, 10)), " = ", "____[#____ - 9](", "'" .. dumpString("RunString(\"return " .. randomName .. "\")()") .. "'", ")\n" }
     elseif x > 3 then
         return table.concat{ "local ", string.rep("_", math.random(5, 10)), " = ____[", math.random(1, 31), "]\n" }
     else -- x == 3, 2, or 1

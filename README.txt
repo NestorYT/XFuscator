@@ -10,6 +10,7 @@ XFuscator (about 10 KB) becomes 500-700 KB.
 
 
 Features:
+- GLUA encoding
 - Remove comments
 - Rename ALL local variables SAFELY (see below, obfuscates precompiled local names also)
 - extract all constants

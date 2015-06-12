@@ -253,7 +253,7 @@ return function(code)
     local hash = sha.hash256(code)
     return shaCode .. [[
 if hash256("]] .. XFuscator.DumpString(code) .. [[") ~= "]] .. hash .. [[" then
-    error("SHA256 Hash mismatch - did someone tamper with the code?")
+    print("SHA256 Hash mismatch - did someone tamper with the code?")
 end
 ]]
 end
